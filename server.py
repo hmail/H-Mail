@@ -1,69 +1,101 @@
 import tornado.ioloop
 import tornado.web
+from model import User, Message, get_session
 from datetime import datetime
 
-db_name = "tornadail"
-db_username = "tornadail"
-db_password = "tornadail"
+# Tornadail Configuration
+server_port = 2626                       # Default: 26
+db_address = "sqlite:///tornadail.db"    # DB of you choice
 
 
-class MainHandler(tornado.web.RequestHandler):
+session = get_session(db_address)
+
+
+class ServerHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("Hello, world")
+        details = {
+                    'server': 'Tornadail',
+                    'version': '0.1',
+                    'protocol': '0.1'}
+        self.write(details)
         self.set_status(200)
 
 
 class UserHandler(tornado.web.RequestHandler):
     def get(self, username):
+        messages = []
+        for message in session.query(Message).all():
+            m = {
+                'sender': message.sender,
+                'recipient': message.recipient,
+                'time': str(message.time),
+                'title': message.title,
+                'content': message.content,
+                'read': message.read,
+                'id': message.id
+                }
+            messages.append(m)
         listing = {
                     'order': '-date',
                     'limit': 10,
-                    'messages': [
-                        {'from': 'yoav#service.com',
-                        'id': 1,
-                        'to': '%s#service.com' % username,
-                        'title': 'here is the title',
-                        'read': True,
-                        'date': str(datetime.now())
-                        },
-                        {'from': 'yoav#service.com',
-                        'id': 2,
-                        'to': '%s#service.com' % username,
-                        'title': 'here is the title',
-                        'read': False,
-                        'date': str(datetime.now())
-                        }
-                        ]
+                    'messages': messages
                     }
         self.write(listing)
         self.set_status(200)
 
-    def post(self):
+    def post(self, username):
+        try:
+            user = session.query(User).filter_by(name=username).one()
+        except:
+            user = User(name=username)
+            session.add(user)
+            session.commit()
+        message = Message(user=user,
+                            sender=self.get_argument('sender'),
+                            recipient=self.get_argument('recipient'),
+                            time=datetime.now(),
+                            title=self.get_argument('title'),
+                            content=self.get_argument('content'),
+                            read=False)
+        session.add(message)
+        session.commit()
         self.set_status(201)
 
 
 class MessageHandler(tornado.web.RequestHandler):
     def get(self, username, message_id):
-        message = {'from': 'yoav#service.com',
-                    'to': '%s#service.com' % username,
-                    'id': message_id,
-                    'read': True,
-                    'title': 'here is the title',
-                    'date': str(datetime.now()),
-                    'content': 'hey man!'}
-        self.write(message)
+        try:
+            message = session.query(Message).filter_by(id=message_id).one()
+        except:
+            self.set_status(404)
+            return
+        data = {'recipient': message.recipient,
+                    'sender': message.sender,
+                    'read': message.read,
+                    'title': message.title,
+                    'date': str(message.time),
+                    'content': message.content}
+        self.write(data)
         self.set_status(200)
+
+    def delete(self, username, message_id):
+        try:
+            message = session.query(Message).filter_by(id=message_id).one()
+        except:
+            self.set_status(404)
+            return
+        session.delete(message)
+        session.commit()
 
 
 application = tornado.web.Application([
-    (r"/", MainHandler),
+    (r"/", ServerHandler),
     (r"/([a-z]+)/", UserHandler),
     (r"/([a-z]+)/([0-9]+)", MessageHandler),
-
 ])
 
 if __name__ == "__main__":
-    application.listen(2626)
+    application.listen(server_port)
     application.debug = True
-    print("Tornadail H-Mail Server is running on port 2626")
+    print("Tornadail H-Mail Server is running on port %s" % server_port)
     tornado.ioloop.IOLoop.instance().start()
