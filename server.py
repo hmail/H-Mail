@@ -87,6 +87,21 @@ class MessageHandler(tornado.web.RequestHandler):
         session.delete(message)
         session.commit()
 
+    def put(self, username, message_id):
+        try:
+            message = session.query(Message).filter_by(id=message_id).one()
+        except:
+            self.set_status(404)
+            return
+        for key in self.request.arguments:
+            value = self.get_argument(key)
+            if value == "True":
+                value = True
+            elif value == "False":
+                value = False
+            message.__setattr__(key, value)
+        session.commit()
+
 
 application = tornado.web.Application([
     (r"/", ServerHandler),
