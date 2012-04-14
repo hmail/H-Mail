@@ -111,3 +111,15 @@ In case of an error, the server uses one of the following:
 # Conclusion
 
 The H-Mail protocol is under development, and this is it's first draft. Besides implementing it, we will be happy to know what you think about it. Contact us.
+
+# Inspirions and Prior art
+
+* http://mailnuggets.com/pages/features/email_over_http_post
+* http://webhooks.wordpress.com/2009/02/13/restful-email-over-http/
+
+# TODO
+
+* Tags and other mail properties
+* Authentication
+* Forwarding standard?
+* Attachments, other types rather than message (i.e. sending a reminder)
