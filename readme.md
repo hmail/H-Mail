@@ -31,7 +31,8 @@ An H-Mail to someone#example.com looks like this:
     {'title': 'Welcome aboard!',
      'content': 'You are now part of H-Mail',
      'sender': 'someone#somewhere.com',
-     'recipient: 'someone#example.com'}
+     'recipient: 'someone#example.com',
+     'protocol': 0.1}
 
 #### Response
 If the mail was accpeted, the server reponses with a simple HTTP 201 Created:
@@ -45,8 +46,8 @@ In case of an error, the server uses one of the following:
 * 413 - The message exceeded the maximum size the server accpets
 * 404 - The recipient does not exist on the server
 * 401 - You have been banned from the server (optional: speicify contact information)
-* 429 - You sent too many mails in a short time. You can ry again later.
-* 507 - The recipient is out of space. You can ry again later.
+* 429 - You sent too many mails in a short time. You can retry again later.
+* 507 - The recipient is out of space. You can retry again later.
 * 426 - Server only recives messages over HTTPS.
 
 ### Getting a list of mails for an account
