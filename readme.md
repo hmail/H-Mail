@@ -92,3 +92,22 @@ In case of an error, the server uses one of the following:
 * 401 - not authorised
 * 404 - no such mail
 * 410 - was removed
+
+
+# Use H-Mail
+## H-Mail Servers
+
+* Tornadail (Python, Tornado based, database agnostic)
+* Write your own!
+
+## Web applications
+
+* Write your own!
+
+## Desktop applications
+
+* Patch your favourite application!
+
+# Conclusion
+
+The H-Mail protocol is under development, and this is it's first draft. Besides implementing it, we will be happy to know what you think about it. Contact us.
