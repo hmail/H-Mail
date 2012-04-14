@@ -19,7 +19,7 @@ H-Mail isn't just a cool idea. We really want to get rid of the old E-Mail and w
 * **Are you a server administrator?** Run an H-Mail server on your server. It's so lightweight, and maybe one day you can git rid of that old E-Mail server you're wasting your time on.
 
 ## How does it work
-H-Mail is all about simplicity, and it's designed with REST in mind. We use HTTP status codes intensively, and when there's need for data response we're using JSON.
+H-Mail is all about simplicity, and it's designed with REST in mind. We use HTTP status codes intensively, and all repsonses are formatted in JSON. Every request and response includes at least one variable - the protocol version.
 
 ### Sending a mail
 
@@ -34,9 +34,11 @@ An H-Mail to someone#example.com looks like this:
      'recipient: 'someone#example.com'}
 
 #### Response
-If the mail was accpeted, the server reponses with HTTP 201 Created:
+If the mail was accpeted, the server reponses with a simple HTTP 201 Created:
 
     HTTP 201
+
+    {'protocol': 0.1}
 
 In case of an error, the server uses one of the following:
 
@@ -50,7 +52,7 @@ In case of an error, the server uses one of the following:
 ### Getting a list of mails for an account
 #### Request
 
-    GET server.com:26/yoav/ (listing)
+    GET server.com:26/user/ (listing)
 
 * 200 - list (JSON)
 * 304 - cached
@@ -59,7 +61,7 @@ In case of an error, the server uses one of the following:
 ### Reading a mail
 #### Request
 
-    GET server.com:26/yoav/123 (e-mail content)
+    GET server.com:26/user/123 (e-mail content)
 
 #### Response
 
@@ -72,7 +74,7 @@ In case of an error, the server uses one of the following:
 ### Deleting a mail:
 #### Request
 
-    DELETE server.com/yoav/123
+    DELETE server.com/user/123
 
 #### Response
 
@@ -84,7 +86,7 @@ In case of an error, the server uses one of the following:
 ### Marking mail as read/unread/spam:
 #### Request
 
-    PUT server.com/yoav/123
+    PUT server.com/user/123
 
 #### Response
 
