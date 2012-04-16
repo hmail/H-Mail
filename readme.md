@@ -54,7 +54,9 @@ In case of an error, the server uses one of the following:
 ### Getting a list of mails for an account
 #### Request
 
-    GET /user/
+Getting the list of messages for the user 'jimi':
+
+    GET /jimi/
     Host: server.com:26
     Accept: text/json
 
@@ -76,16 +78,16 @@ You can specify these GET parameters in the request:
       "offset": 0,
       "messages": [
                     {
-                      "sender": "someone#somewhere.com",
-                      "recipient": "someone@example.com",
+                      "sender": "george#beatles.com",
+                      "recipient": "jimi#hendrix.com",
                       "time": "2012-04-13 22:46:35",
                       "title": "Welcome to H-Mail!",
                       "read": true,
                       "id": 1
                     },
                     {
-                      "sender": "someone@example.com",
-                      "recipient": "someone#somewhere.com",
+                      "sender": "john#beatles.com",
+                      "recipient": "jimi#hendrix.com",
                       "time": "2012-04-13 22:46:36",
                       "title": "How do you like H-Mail so far?",
                       "read": false,
@@ -104,7 +106,7 @@ Other possible responses are:
 ### Reading a mail
 #### Request
 
-    GET /user/123
+    GET /jimi/123
     Host: server.com:26
     Accept: text/json
 
@@ -115,8 +117,8 @@ Other possible responses are:
 
     {
       "title": "Welcome aboard!",
-      "sender": "someone#somewhere.com",
-      "recipient: "someone#example.com",
+      "sender": "john#beatles.com",
+      "recipient: "jimi#hendrix.com",
       "content": [
                     {
                       "content-type": "text/plain",
@@ -157,7 +159,7 @@ Other possible responses are:
 ### Deleting a mail:
 #### Request
 
-    DELETE /user/123
+    DELETE /jimi/123
     Host: server.com:26
     Accept: text/json
 
@@ -171,7 +173,7 @@ Other possible responses are:
 ### Marking mail as read/unread/spam:
 #### Request
 
-    PUT /user/123
+    PUT /jimi/123
     Host: server.com:26
     Accept: text/json
 
