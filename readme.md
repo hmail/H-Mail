@@ -28,16 +28,17 @@ An H-Mail to someone#example.com looks like this:
 
     POST example.com:26/someone/
     
-    {'title': 'Welcome aboard!',
-     'content': 'You are now part of H-Mail',
-     'sender': 'someone#somewhere.com',
-     'recipient: 'someone#example.com',
-     'protocol': 0.1}
+    {"title": "Welcome aboard!",
+     "content": "You are now part of H-Mail",
+     "sender": "someone#somewhere.com",
+     "recipient: "someone#example.com",
+     "protocol": 0.1}
 
 #### Response
 If the mail was accpeted, the server reponses with a simple HTTP 201 Created:
 
-    HTTP 201
+    HTTP/1.1 201 Created
+    Content-Type: application/json; charset=UTF-8
 
     {'protocol': 0.1}
 
@@ -53,29 +54,111 @@ In case of an error, the server uses one of the following:
 ### Getting a list of mails for an account
 #### Request
 
-    GET server.com:26/user/ (listing)
+    GET /user/
+    Host: server.com:26
+    Accept: text/json
 
-* 200 - list (JSON)
-* 304 - cached
-* 401 - not authorised
+You can specify these GET parameters in the request:
+
+* limit - Limit the amount of messages in the list. Default: 15
+* order - Order the message by 'sender', 'recpient', 'time' or 'title'. Adding negative sign at the beginning indicates descending order. Default: "-time"
+* offset - Start listing from object #x. Default: 0
+* summary - Include a plaintext version of the message's content. Default: false
+
+#### Response
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json; charset=UTF-8
+
+    {
+      "limit": 15,
+      "order": "-time",
+      "offset": 0,
+      "messages": [
+                    {
+                      "sender": "someone#somewhere.com",
+                      "recipient": "someone@example.com",
+                      "time": "2012-04-13 22:46:35",
+                      "title": "Welcome to H-Mail!",
+                      "read": true,
+                      "id": 1
+                    },
+                    {
+                      "sender": "someone@example.com",
+                      "recipient": "someone#somewhere.com",
+                      "time": "2012-04-13 22:46:36",
+                      "title": "How do you like H-Mail so far?",
+                      "read": false,
+                      "id": 2
+                    }
+                  ]
+    }
+
+Other possible responses are:
+
+* 304 Not Modified - Message has not been modified since last requested
+* 401 Unauthorized - Client didn't authenticate or it failed to do so
+* 426 Upgrade Required - Server only operates over HTTPS
 
 ### Reading a mail
 #### Request
 
-    GET server.com:26/user/123 (e-mail content)
+    GET /user/123
+    Host: server.com:26
+    Accept: text/json
 
 #### Response
 
-* 200 - mail content (JSON)
-* 304 - cached
-* 401 - not authorised
-* 404 - no such mail
-* 410 - was removed
+    HTTP/1.1 200 OK
+    Content-Type: application/json; charset=UTF-8
+
+    {
+      "title": "Welcome aboard!",
+      "content": "You are now part of H-Mail",
+      "sender": "someone#somewhere.com",
+      "recipient: "someone#example.com",
+      "content": [
+                    {
+                      "content-type": "text/plain",
+                      "charset": "UTF-8",
+                      "content": "You are now part of H-Mail"
+                    }
+                 ]
+      "protocol": 0.1
+    }
+
+ Content can include as many objects as you want, and of *any kind*. It can have be text/html, text/calendar, or anything else really. If your client knows how to display it, it will, and if not, it will show up as an attachment with the title as the filename.
+
+ Attachements are also handled in this way, except they include one more property: filename. That's how you can distiguish between a message and the text file that came with it:
+
+     "content": [
+                  {
+                    "content-type": "text/plain",
+                    "charset": "UTF-8",
+                    "content": "this should be displayed by the client"
+                  },
+                  {
+                    "filename": "somefile.txt"
+                    "content-type": "text/plain",
+                    "charset": "UTF-8",
+                    "content": "this is just an attachment"
+                  }
+                ]
+
+Other possible responses are:
+* 304 Not Modified - Message has not been modified since last requested
+* 401 Unauthorized - Client didn't authenticate or it failed to do so
+* 404 Not Found - Message doesn't exist
+* 410 Gone - Message was removed
+* 426 Upgrade Required - Server only operates over HTTPS
+
 
 ### Deleting a mail:
 #### Request
 
-    DELETE server.com/user/123
+    DELETE /user/123
+    Host: server.com:26
+    Accept: text/json
 
 #### Response
 
@@ -87,7 +170,9 @@ In case of an error, the server uses one of the following:
 ### Marking mail as read/unread/spam:
 #### Request
 
-    PUT server.com/user/123
+    PUT /user/123
+    Host: server.com:26
+    Accept: text/json
 
 #### Response
 
@@ -124,5 +209,4 @@ The H-Mail protocol is under development, and this is it's first draft. Besides 
 
 * Tags and other mail properties
 * Authentication
-* Forwarding standard?
-* Attachments, other types rather than message (i.e. sending a reminder)
+* Get without attachments (default?)
