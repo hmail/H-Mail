@@ -19,7 +19,7 @@ H-Mail isn't just a cool idea. We really want to get rid of the old E-Mail and w
 * **Are you a server administrator?** Run an H-Mail server on your server. It's so lightweight, and maybe one day you can git rid of that old E-Mail server you're wasting your time on.
 
 ## How does it work
-H-Mail is all about simplicity, and it's designed with REST in mind. We use HTTP status codes intensively, and all repsonses are formatted in JSON. Every request and response includes at least one variable - the protocol version.
+H-Mail is all about simplicity, and it's designed with REST in mind. We use HTTP status codes intensively, and all responses are formatted in JSON. Every request and response includes at least one variable - the protocol version.
 
 ### Sending a mail
 
@@ -35,7 +35,7 @@ An H-Mail to someone#example.com looks like this:
      "protocol": 0.1}
 
 #### Response
-If the mail was accpeted, the server reponses with a simple HTTP 201 Created:
+If the mail was accepted, the server responses with a simple HTTP 201 Created:
 
     HTTP/1.1 201 Created
     Content-Type: application/json; charset=UTF-8
@@ -44,12 +44,12 @@ If the mail was accpeted, the server reponses with a simple HTTP 201 Created:
 
 In case of an error, the server uses one of the following:
 
-* 413 - The message exceeded the maximum size the server accpets
+* 413 - The message exceeded the maximum size the server accepts
 * 404 - The recipient does not exist on the server
-* 401 - You have been banned from the server (optional: speicify contact information)
+* 401 - You have been banned from the server (optional: specify contact information)
 * 429 - You sent too many mails in a short time. You can retry again later.
 * 507 - The recipient is out of space. You can retry again later.
-* 426 - Server only recives messages over HTTPS.
+* 426 - Server only receives messages over HTTPS.
 
 ### Getting a list of mails for an account
 #### Request
@@ -114,7 +114,6 @@ Other possible responses are:
 
     {
       "title": "Welcome aboard!",
-      "content": "You are now part of H-Mail",
       "sender": "someone#somewhere.com",
       "recipient: "someone#example.com",
       "content": [
@@ -129,7 +128,7 @@ Other possible responses are:
 
  Content can include as many objects as you want, and of *any kind*. It can have be text/html, text/calendar, or anything else really. If your client knows how to display it, it will, and if not, it will show up as an attachment with the title as the filename.
 
- Attachements are also handled in this way, except they include one more property: filename. That's how you can distiguish between a message and the text file that came with it:
+ Attachments are also handled in this way, except they include one more property: filename. That's how you can distinguish between a message and the text file that came with it:
 
      "content": [
                   {
