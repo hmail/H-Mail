@@ -91,7 +91,8 @@ You can specify these GET parameters in the request:
                       "read": false,
                       "id": 2
                     }
-                  ]
+                  ],
+      "protocol": 0.1                  
     }
 
 Other possible responses are:
