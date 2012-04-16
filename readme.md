@@ -145,6 +145,7 @@ Other possible responses are:
                 ]
 
 Other possible responses are:
+
 * 304 Not Modified - Message has not been modified since last requested
 * 401 Unauthorized - Client didn't authenticate or it failed to do so
 * 404 Not Found - Message doesn't exist
