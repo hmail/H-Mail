@@ -199,10 +199,12 @@ Other possible responses are:
 
 The H-Mail protocol is under development, and this is it's first draft. Besides implementing it, we will be happy to know what you think about it. Contact us.
 
-# Inspirions and Prior art
+# Inspirations and Prior art
 
 * http://mailnuggets.com/pages/features/email_over_http_post
 * http://webhooks.wordpress.com/2009/02/13/restful-email-over-http/
+* https://github.com/progrium/httpmail
+* http://tools.ietf.org/html/draft-dusseault-httpmail-00
 
 # TODO
 
